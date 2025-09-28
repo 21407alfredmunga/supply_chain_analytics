@@ -66,8 +66,9 @@ def load_orders(path: Optional[Path] = None) -> pd.DataFrame:
 def load_production_plan(path: Optional[Path] = None) -> pd.DataFrame:
     """Load the Prosacco production plan and return a long-form dataframe."""
     path = _ensure_path(path, DATA_DIR / "Prosacco-production-plan.xlsx")
-    matrix = pd.read_excel(path, header=1)
-    matrix = matrix[matrix["SKU"].notna()].copy()
+    matrix = pd.read_excel(path, header=2)
+    matrix = matrix.loc[:, ~matrix.columns.astype(str).str.contains("Unnamed", na=False)].copy()
+    matrix = matrix[matrix["SKU"].notna()]
     matrix["SKU"] = matrix["SKU"].astype(str)
 
     value_cols = [col for col in matrix.columns if col != "SKU"]
