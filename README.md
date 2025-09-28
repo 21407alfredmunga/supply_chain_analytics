@@ -24,7 +24,7 @@ This repository explores end-to-end supply chain performance for Prosacco produc
 2. **Create the Python environment**:
 
    ```bash
-   bash create_datascience_env.sh
+   ./create_datascience_env.sh
    ```
 
    This script builds a `datascience_env/` virtual environment and installs pandas, matplotlib, seaborn, scikit-learn, TensorFlow, PyTorch, and other frequently used packages.
