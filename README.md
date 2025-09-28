@@ -73,6 +73,3 @@ When you finish a session, deactivate the environment with `deactivate`.
 
 Feel free to fork the project, open issues for bugs or enhancement ideas, and submit pull requests with improvements. Please document any new datasets or dependencies in this README.
 
-## License
-
-No explicit license has been provided. If you plan to share or reuse this work publicly, consider adding an appropriate open-source license.
