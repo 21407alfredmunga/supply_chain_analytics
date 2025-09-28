@@ -45,6 +45,9 @@ PACKAGES=(
     bokeh
     streamlit
     pydot
+    altair
+    pulp
+    pytest
 )
 
 # Install packages

@@ -16,7 +16,10 @@ This repository explores end-to-end supply chain performance for Prosacco produc
   - `Prosacco-production-plan.xlsx` – Weekly production commitments per SKU.
   - `Prosacco-analysis-solution.xlsx` – Excel workbook with the three data sheets (`Data1`, `Data2`, `Data3`) used in `Prosacco_Analysis.ipynb`.
 - `create_datascience_env.sh` – Utility script that provisions a Python virtual environment preloaded with common analytics libraries.
- 
+- `analytics/` – Reusable Python modules. `kpi.py` computes fill rate, OTIF, and days-of-cover metrics and can export summaries to `outputs/`.
+- `dashboard/streamlit_app.py` – Streamlit dashboard that visualises KPI results and lets you interactively filter SKUs.
+- `tests/` – Automated data-quality checks powered by `pytest` to flag issues before running analyses.
+
 ## Getting started
 
 1. **Clone the repository** (or download the ZIP) onto your machine.
@@ -43,6 +46,24 @@ This repository explores end-to-end supply chain performance for Prosacco produc
 
 When you finish a session, deactivate the environment with `deactivate`.
 
+## KPI automation & dashboard
+
+Generate KPI artefacts from the command line:
+
+```bash
+python -m analytics.kpi
+```
+
+This command writes `outputs/kpi_summary.csv` and `outputs/kpi_overview.json`.
+
+Launch the Streamlit dashboard for interactive exploration:
+
+```bash
+streamlit run dashboard/streamlit_app.py
+```
+
+Use the sidebar to point at an alternative data directory if you keep copies outside the repo.
+
 ## Working with the notebooks
 
 1. With the environment activated, launch Jupyter Lab or Notebook:
@@ -57,6 +78,22 @@ When you finish a session, deactivate the environment with `deactivate`.
 
 4. Use the existing visualisations and summary tables as starting points for deeper dives—e.g., scenario modelling, safety stock calculations, or channel-specific performance tracking.
 
+### Linear programming scenario (sales coverage notebook)
+
+- Open `sales_coverage_optimization.ipynb` and execute the newly added section on linear programming to compute an optimised allocation plan.
+- The workbook aggregates inventory, demand, and production and then solves a `PuLP` model that maximises fulfilled units subject to market demand and supply constraints.
+- Outputs include SKU and city level fill rates plus remaining supply, allowing you to compare optimised results with descriptive analytics earlier in the notebook.
+
+### Running data-quality checks
+
+Execute automated validations whenever the raw files change:
+
+```bash
+pytest
+```
+
+The tests verify non-negative inventory, order quantities, production weeks, and ensure KPI calculations stay within expected bounds.
+
 ## Data highlights
 
 - **Inventory**: Provides SKU-level availability by warehouse, enabling coverage and safety stock checks.
@@ -65,9 +102,9 @@ When you finish a session, deactivate the environment with `deactivate`.
 
 ## Suggested next steps
 
-- Automate KPI calculation (fill rate, on-time in full, days of cover) and surface them via dashboards or Streamlit.
-- Extend the optimisation notebook with linear programming or heuristic approaches to rebalance supply across markets.
-- Add unit tests or validation scripts to monitor data quality before running the analyses.
+- Incorporate transportation costs and lane capacities into the optimisation to balance service levels against logistics spend.
+- Introduce scenario parameters (e.g., demand surges, production delays) and expose them via the Streamlit dashboard for what-if analysis.
+- Schedule nightly data validation and KPI refresh jobs (GitHub Actions or cron) to keep deliverables current without manual intervention.
 
 ## Contributing
 
