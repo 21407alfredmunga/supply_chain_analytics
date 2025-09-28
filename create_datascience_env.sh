@@ -48,6 +48,8 @@ PACKAGES=(
     altair
     pulp
     pytest
+    openpyxl
+    xlrd
 )
 
 # Install packages

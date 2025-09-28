@@ -50,3 +50,14 @@ def test_kpi_results_bounds():
         assert 0 <= totals["Fill Rate"] <= 1, "Overall fill rate should be between 0 and 1"
     if not np.isnan(totals.get("OTIF", np.nan)):
         assert 0 <= totals["OTIF"] <= 1, "Overall OTIF should be between 0 and 1"
+
+
+def test_lane_configuration_covers_all_cities():
+    orders = kpi.load_orders(DATA_DIR / "Prosacco-order-report.csv")
+    lane_config = pd.read_csv(DATA_DIR / "Prosacco-lane-costs.csv")
+
+    missing = set(orders["city"].unique()) - set(lane_config["City"].str.strip())
+    assert not missing, f"Missing transportation lane data for: {sorted(missing)}"
+
+    assert lane_config["CostPerUnit"].gt(0).all(), "Lane costs must be positive"
+    assert lane_config["MaxCapacity"].gt(0).all(), "Lane capacities must be positive"

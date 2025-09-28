@@ -53,12 +53,58 @@ with st.sidebar:
     custom_dir = st.text_input("Data directory", value=str(DATA_DIR))
     refresh = st.button("Recompute KPIs", type="primary")
 
+    st.header("Scenario controls")
+    demand_surge_pct = st.slider(
+        "Demand surge (%)", min_value=-50, max_value=150, value=0, step=5,
+        help="Scale customer orders to stress-test fulfilment (negative values model demand drops).",
+    )
+    production_delay_weeks = st.slider(
+        "Production delay (weeks)", min_value=0, max_value=8, value=0,
+        help="Shift the production plan forward to simulate delays in manufacturing or inbound supply.",
+    )
+    production_multiplier = st.slider(
+        "Production multiplier",
+        min_value=0.2,
+        max_value=1.8,
+        value=1.0,
+        step=0.1,
+        help="Scale weekly production volumes to reflect overtime, additional shifts, or capacity reductions.",
+    )
+    inventory_buffer_pct = st.slider(
+        "Inventory buffer (%)",
+        min_value=-50,
+        max_value=100,
+        value=0,
+        step=5,
+        help="Apply a buffer (or depletion) factor to current on-hand inventory.",
+    )
+
 if refresh:
     load_data.clear()
 
 inventory_df, orders_df, production_df = load_data(custom_dir)
 
-kpi_df, totals = compute_kpis(inventory_df, orders_df, production_df)
+demand_multiplier = 1 + demand_surge_pct / 100
+inventory_multiplier = 1 + inventory_buffer_pct / 100
+
+scenario_orders = orders_df.copy()
+scenario_orders["qty_ord"] = (scenario_orders["qty_ord"] * demand_multiplier).clip(lower=0)
+
+scenario_inventory = inventory_df.copy()
+scenario_inventory["available"] = (scenario_inventory["available"] * inventory_multiplier).clip(lower=0)
+
+scenario_production = production_df.copy()
+scenario_production["produced"] = scenario_production["produced"] * production_multiplier
+if production_delay_weeks:
+    scenario_production["week"] = scenario_production["week"] + int(production_delay_weeks)
+
+kpi_df, totals = compute_kpis(scenario_inventory, scenario_orders, scenario_production)
+
+st.info(
+    f"Scenario: demand x{demand_multiplier:.2f}, production x{production_multiplier:.2f}, "
+    f"production delay {production_delay_weeks} weeks, inventory x{inventory_multiplier:.2f}.",
+    icon="⚙️",
+)
 
 st.subheader("Overall performance")
 col1, col2, col3 = st.columns(3)
@@ -92,11 +138,11 @@ st.dataframe(
 
 st.subheader("Visual summary")
 chart_df = filtered_df[["Fill Rate", "OTIF"]]
-st.bar_chart(chart_df, use_container_width=True)
+st.bar_chart(chart_df, height=320)
 
 st.subheader("Inventory coverage")
 coverage_df = filtered_df[["Days of Cover"]]
-st.line_chart(coverage_df, use_container_width=True)
+st.line_chart(coverage_df, height=320)
 
 st.divider()
 

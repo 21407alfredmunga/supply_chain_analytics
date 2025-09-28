@@ -1,0 +1,44 @@
+City,CostPerUnit,MaxCapacity
+Austin,1.85,4200
+Baltimore,1.65,4300
+Boston,1.90,4100
+Calgary,2.60,3000
+Charlotte,1.70,4000
+Chicago,1.75,5200
+Columbus,1.68,3900
+Dallas,1.80,5100
+Denver,1.95,3600
+Detroit,1.72,3800
+Edmonton,2.55,2900
+El Paso,1.88,3700
+Fort Worth,1.82,4400
+Guadalajara,2.95,3100
+Houston,1.78,5400
+Indianapolis,1.66,4200
+Jacksonville,1.74,4300
+Las Vegas,2.05,3500
+Los Angeles,2.10,5600
+Louisville,1.69,4100
+Memphis,1.71,4000
+Mexico City,3.10,3200
+Miami,2.00,3600
+Milwaukee,1.67,3700
+Monterrey,2.85,3200
+Montreal,2.50,3000
+NEW YORK CITY,2.20,6000
+Nashville,1.70,3900
+Oakland,2.08,4000
+Oklahoma City,1.77,4100
+Philadelphia,1.92,4700
+Phoenix,1.98,4200
+Portland,2.00,3600
+Puebla,2.90,3000
+San Antonio,1.79,4200
+San Diego,2.06,3800
+San Francisco,2.18,4300
+San Jose,2.12,3900
+Seattle,2.15,3700
+Tijuana,2.75,3200
+Toronto,2.45,3100
+Vancouver,2.55,3000
+Washington,1.95,4500
